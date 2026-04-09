@@ -181,20 +181,28 @@ function navigate(page) {
     a.style.color = '';
   });
 }
-
 function renderPage(page) {
   const app = document.getElementById('app');
-  app.innerHTML = '';
-  const renderers = {
-    home: renderHome,
-    about: renderAbout,
-    lessons: renderLessons,
-    events: renderEvents,
-    announcements: renderAnnouncements,
-    contact: renderContact
-  };
-  (renderers[page] || renderHome)();
-  initScrollAnimations();
+
+  app.style.opacity = 0;
+
+  setTimeout(() => {
+    app.innerHTML = '';
+
+    const renderers = {
+      home: renderHome,
+      about: renderAbout,
+      lessons: renderLessons,
+      events: renderEvents,
+      announcements: renderAnnouncements,
+      contact: renderContact
+    };
+
+    (renderers[page] || renderHome)();
+    initScrollAnimations();
+
+    app.style.opacity = 1;
+  }, 200);
 }
 
 // ─── NAV SCROLL ────────────────────────────────
@@ -542,10 +550,10 @@ function renderAbout() {
         <div class="divider center fade-up"></div>
         <div class="grid-4" style="margin-top:48px;">
           ${[
-            { icon: '🏆', val: '500+', label: 'Students Taught' },
-            { icon: '🎭', val: '50+', label: 'Student Performances' },
-            { icon: '🥇', val: '30+', label: 'Competition Wins' },
-            { icon: '🎓', val: '20+', label: 'RCM Certifications' }
+            { icon: '', val: '500+', label: 'Students Taught' },
+            { icon: '', val: '50+', label: 'Student Performances' },
+            { icon: '', val: '30+', label: 'Competition Wins' },
+            { icon: '', val: '20+', label: 'RCM Certifications' }
           ].map(a => `
             <div class="fade-up" style="text-align:center;padding:32px 20px;background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:4px;">
               <div style="font-size:40px;margin-bottom:16px;">${a.icon}</div>
@@ -599,13 +607,12 @@ function renderLessons() {
       <div class="divider fade-up"></div>
       <div class="grid-4" style="margin-top:40px;">
         ${[
-          { icon: '🌱', name: 'Beginner', desc: 'No experience needed. Build breath control, pitch, and confidence from your very first lesson.' },
-          { icon: '📈', name: 'Intermediate', desc: 'Expand your range, refine your technique, and develop your own artistic voice.' },
-          { icon: '🏆', name: 'Advanced', desc: 'Intensive coaching for singers pursuing competitions, auditions, or professional performance.' },
-          { icon: '👶', name: 'Kids (Ages 6+)', desc: 'Age-appropriate, fun lessons that build real musical skills while making singing a joy.' }
+          { name: 'Beginner', desc: 'No experience needed. Build breath control, pitch, and confidence from your very first lesson.' },
+          { name: 'Intermediate', desc: 'Expand your range, refine your technique, and develop your own artistic voice.' },
+          { name: 'Advanced', desc: 'Intensive coaching for singers pursuing competitions, auditions, or professional performance.' },
+          { name: 'Kids (Ages 6+)', desc: 'Age-appropriate, fun lessons that build real musical skills while making singing a joy.' }
         ].map(l => `
           <div class="lesson-type-card fade-up">
-            <div class="lesson-icon">${l.icon}</div>
             <div class="lesson-type-name">${l.name}</div>
             <p class="lesson-type-desc">${l.desc}</p>
           </div>
@@ -618,21 +625,18 @@ function renderLessons() {
         <div class="section-label fade-up">Curriculum</div>
         <h2 class="section-title fade-up">What You'll <em>Learn</em></h2>
         <div class="divider fade-up"></div>
-        <div class="grid-3" style="margin-top:40px;gap:16px;">
+        <div class="grid-3" style="margin-top:40px;gap:20px;">
           ${[
-            { icon: '🎵', title: 'Vocal Technique', desc: 'Breathing, posture, resonance, register transitions, and healthy voice production.' },
-            { icon: '🎭', title: 'Performance Skills', desc: 'Stage presence, mic technique, storytelling through song, and managing nerves.' },
-            { icon: '🎼', title: 'Music Theory', desc: 'Reading music, rhythm, scales, and intervals — understanding music makes you a stronger singer.' },
-            { icon: '🎤', title: 'Repertoire', desc: 'From pop to classical, musical theatre to RCM — build a diverse personal song catalogue.' },
-            { icon: '💪', title: 'Confidence Building', desc: 'A safe environment that pushes students to take risks and believe in their voice.' },
-            { icon: '🏅', title: 'Competition Prep', desc: 'Strategic prep for Kiwanis, RCM exams, auditions, and local competitions.' }
+            { title: 'Vocal Technique', desc: 'Breathing, posture, resonance, register transitions, and healthy voice production.' },
+            { title: 'Performance Skills', desc: 'Stage presence, mic technique, storytelling through song, and managing nerves.' },
+            { title: 'Music Theory', desc: 'Reading music, rhythm, scales, and intervals — understanding music makes you a stronger singer.' },
+            { title: 'Repertoire', desc: 'From pop to classical, musical theatre to RCM — build a diverse personal song catalogue.' },
+            { title: 'Confidence Building', desc: 'A safe environment that pushes students to take risks and believe in their voice.' },
+            { title: 'Competition Prep', desc: 'Strategic prep for Kiwanis, RCM exams, auditions, and local competitions.' }
           ].map(i => `
-            <div class="fade-up" style="display:flex;gap:18px;align-items:flex-start;padding:24px;background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:4px;">
-              <div style="font-size:26px;flex-shrink:0;">${i.icon}</div>
-              <div>
-                <div style="font-family:var(--font-head);font-size:17px;font-weight:700;margin-bottom:8px;">${i.title}</div>
-                <p style="font-size:13px;color:rgba(253,252,248,0.6);line-height:1.75;">${i.desc}</p>
-              </div>
+            <div class="lesson-type-card fade-up">
+              <div class="lesson-type-name">${i.title}</div>
+              <p class="lesson-type-desc">${i.desc}</p>
             </div>
           `).join('')}
         </div>
@@ -647,15 +651,15 @@ function renderLessons() {
         <p style="font-size:15px;color:rgba(253,252,248,0.55);font-style:italic;margin-bottom:40px;" class="fade-up">
           Students arrive nervous and unsure — they leave <strong style="color:var(--gold);font-style:normal;">confident, expressive, and unstoppable.</strong>
         </p>
-        <div class="grid-3" style="text-align:left;">
+        <div class="grid-3" style="text-align:left;gap:20px;">
           ${[
             { title: 'Confidence on Stage', desc: 'From hesitant to fully present — students become comfortable performing in front of any audience.' },
             { title: 'Strong Technique', desc: 'A healthy, powerful voice built with proper technique that lasts a lifetime.' },
             { title: 'Real Performance Growth', desc: 'From recitals to competitions, measurable progress and real-world experience.' }
           ].map(r => `
-            <div class="fade-up" style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:28px 24px;">
-              <div style="font-family:var(--font-head);font-size:19px;font-weight:700;margin-bottom:10px;">${r.title}</div>
-              <p style="font-size:13px;color:rgba(253,252,248,0.6);line-height:1.75;">${r.desc}</p>
+            <div class="lesson-type-card fade-up">
+              <div class="lesson-type-name">${r.title}</div>
+              <p class="lesson-type-desc">${r.desc}</p>
             </div>
           `).join('')}
         </div>
