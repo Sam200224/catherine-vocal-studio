@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Catherine's Vocal Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #fdfcf8;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dark: #9a7328;
+      --card-bg: #111111;
+      --radius: 4px;
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'Jost', sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --danger: #c0392b;
+      --success: #27ae60;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+        linear-gradient(160deg, #0a0a0a 0%, #1a1200 50%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #loginScreen::before {
+      content: '♩';
+      position: absolute;
+      font-size: 320px;
+      color: rgba(201,168,76,0.04);
+      top: -60px; right: -40px;
+      font-family: var(--font-head);
+      pointer-events: none;
+    }
+    #loginScreen::after {
+      content: '♫';
+      position: absolute;
+      font-size: 200px;
+      color: rgba(201,168,76,0.03);
+      bottom: 20px; left: -20px;
+      font-family: var(--font-head);
+      pointer-events: none;
+    }
+
+    .login-card {
+      background: #111;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: var(--radius);
+      padding: 52px 48px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      animation: fadeUp 0.6s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .login-logo { text-align: center; margin-bottom: 36px; }
+    .login-logo .note { font-size: 40px; color: var(--gold); display: block; margin-bottom: 12px; }
+    .login-logo h1 { font-family: var(--font-head); font-size: 24px; font-weight: 700; line-height: 1.2; }
+    .login-logo h1 em { color: var(--gold); font-style: italic; }
+    .login-logo p { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(253,252,248,0.4); margin-top: 8px; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(253,252,248,0.5); margin-bottom: 8px; }
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 15px;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    .form-input::placeholder { color: rgba(253,252,248,0.25); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 32px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, opacity 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-primary { background: var(--gold); color: var(--black); width: 100%; }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(253,252,248,0.2);
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-danger {
+      background: rgba(192,57,43,0.15);
+      color: #e74c3c;
+      border: 1px solid rgba(192,57,43,0.3);
+      padding: 7px 14px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+    .btn-danger:hover { background: rgba(192,57,43,0.3); box-shadow: none; }
+
+    .login-error {
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #e74c3c;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+
+    /* ── ADMIN DASHBOARD ── */
+    #adminScreen { display: none; }
+
+    .admin-header {
+      background: rgba(10,10,10,0.97);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .admin-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 15px; }
+    .admin-brand span { color: var(--gold); font-size: 22px; }
+    .admin-brand em { color: var(--gold); font-style: italic; }
+    .admin-user { display: flex; align-items: center; gap: 16px; font-size: 13px; color: rgba(253,252,248,0.5); }
+    .admin-user strong { color: var(--gold); }
+
+    .admin-body { max-width: 1100px; margin: 0 auto; padding: 48px 32px 80px; }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 40px; }
+    .tab-btn {
+      background: none; border: none;
+      color: rgba(253,252,248,0.4);
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 16px 28px; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .tab-btn:hover { color: var(--white); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* Section heading */
+    .section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .section-heading { font-family: var(--font-head); font-size: 32px; font-weight: 700; margin-bottom: 6px; }
+    .section-heading em { color: var(--gold); font-style: italic; }
+    .divider { width: 48px; height: 2px; background: var(--gold); margin: 16px 0 32px; }
+
+    /* Form card */
+    .form-card { background: #111; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 36px; margin-bottom: 48px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    textarea.form-input { min-height: 110px; resize: vertical; }
+    select.form-input { appearance: none; cursor: pointer; }
+
+    .submit-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+    .form-feedback { font-size: 13px; font-weight: 500; display: none; align-items: center; gap: 8px; }
+    .form-feedback.success { color: var(--success); }
+    .form-feedback.error   { color: #e74c3c; }
+    .form-feedback.visible { display: flex; }
+
+    /* Table */
+    .table-section { margin-top: 8px; }
+    .table-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(253,252,248,0.4); margin-bottom: 16px; }
+    .table-scroll-wrap {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+    .data-table th { text-align: left; padding: 12px 16px; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(253,252,248,0.35); border-bottom: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(253,252,248,0.75); vertical-align: middle; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .cell-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--white); max-width: 280px; }
+    .cell-title small { display: block; font-family: var(--font-body); font-size: 12px; font-weight: 400; color: rgba(253,252,248,0.4); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .pill { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+    .pill-gold { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .pill-grey { background: rgba(255,255,255,0.06); color: rgba(253,252,248,0.4); }
+    .pill-green { background: rgba(39,174,96,0.15); color: #2ecc71; }
+    .pinned-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin-right: 6px; vertical-align: middle; }
+
+    .empty-state { text-align: center; padding: 48px 24px; color: rgba(253,252,248,0.3); font-size: 14px; }
+    .empty-state .emoji { font-size: 32px; display: block; margin-bottom: 12px; }
+    .loading-row td { text-align: center; color: rgba(253,252,248,0.3); padding: 32px; font-size: 13px; }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Spinner */
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(10,10,10,0.3); border-top-color: var(--black); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .login-card { padding: 36px 20px; }
+      .admin-body { padding: 20px 12px 60px; }
+      .form-card { padding: 20px 14px; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; gap: 14px; }
+      .admin-header { padding: 0 14px; }
+
+      /* Scrollable tab bar */
+      .tab-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; flex-wrap: nowrap; }
+      .tab-btn { padding: 12px 14px; font-size: 11px; letter-spacing: 0.05em; flex-shrink: 0; }
+
+      /* Submit row stacks vertically */
+      .submit-row { flex-direction: column; align-items: stretch; gap: 10px; }
+      .submit-row .btn { width: 100% !important; justify-content: center; padding: 14px 20px; }
+      .form-feedback { justify-content: center; }
+
+      /* Section heading */
+      .section-heading { font-size: 24px; }
+
+      /* Table action buttons wrap */
+      .data-table td[style*="display:flex"] { flex-wrap: wrap; gap: 6px; }
+    }
+
+    @media (max-width: 480px) {
+      .admin-brand { font-size: 13px; }
+      .admin-brand span { font-size: 18px; }
+      .admin-user { gap: 8px; font-size: 12px; }
+      /* Hide "Logged in as" label on tiny screens, keep button */
+      .admin-user-label { display: none; }
+      .tab-btn { padding: 10px 10px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="note">♩</span>
+      <h1>Catherine's <em>Vocal Studio</em></h1>
+      <p>Admin Portal</p>
+    </div>
+
+    <div class="login-error" id="loginError">Incorrect Email or password.</div>
+
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input id="loginUser" class="form-input" type="text" placeholder="Enter Email" autocomplete="Email"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input id="loginPass" class="form-input" type="password" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+
+    <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">
+      Sign In →
+    </button>
+
+    <p style="text-align:center;font-size:12px;color:rgba(253,252,248,0.25);margin-top:20px;">
+      Restricted access. Authorized personnel only.
+    </p>
+  </div>
+</div>
+
+
+<!-- ADMIN DASHBOARD -->
+<div id="adminScreen">
+
+  <header class="admin-header">
+    <div class="admin-brand">
+      <span>♩</span>
+      Catherine's <em>&nbsp;Vocal Studio</em>
+    </div>
+    <div class="admin-user">
+      <span class="admin-user-label">Logged in as <strong id="loggedInUser">—</strong></span>
+      <button class="btn btn-outline" onclick="doLogout()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('announcements', this)">📢 Announcements</button>
+      <button class="tab-btn" onclick="switchTab('events', this)">🗓️ Events</button>
+      <button class="tab-btn" onclick="switchTab('contacts', this)">📩 Contacts</button>
+    </div>
+
+    <!-- ANNOUNCEMENTS TAB -->
+    <div class="tab-panel active" id="tab-announcements">
+
+      <div class="section-eyebrow">Manage Content</div>
+      <h2 class="section-heading">Add <em>Announcement</em></h2>
+      <div class="divider"></div>
+
+      <div class="form-card">
+        <div class="form-row" style="margin-bottom:20px;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Title *</label>
+            <input id="ann-title" class="form-input" type="text" placeholder="e.g. Spring Recital Registration Open!"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Tag</label>
+            <select id="ann-tag" class="form-input">
+              <option value="Update">Update</option>
+              <option value="Important">Important</option>
+              <option value="Reminder">Reminder</option>
+              <option value="Recital">Recital</option>
+              <option value="Event">Event</option>
+              <option value="Schedule">Schedule</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Achievement">Achievement</option>
+              <option value="New">New</option>
+              <option value="Notice">Notice</option>
+              <option value="Registration">Registration</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea id="ann-description" class="form-input" placeholder="Write the full announcement text here..."></textarea>
+        </div>
+
+        <div class="form-row" style="margin-bottom:0;align-items:end;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Icon (emoji)</label>
+            <input id="ann-icon" class="form-input" type="text" placeholder="📢" maxlength="4" style="font-size:22px;"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Display Date Label</label>
+            <input id="ann-date" class="form-input" type="text" placeholder="e.g. Just now, 2 days ago"/>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;align-items:center;gap:12px;">
+          <input type="checkbox" id="ann-pinned" style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer;"/>
+          <label for="ann-pinned" style="font-size:13px;cursor:pointer;color:rgba(253,252,248,0.7);">
+            Pin this announcement (shows at top of page)
+          </label>
+        </div>
+
+        <div class="submit-row" style="margin-top:24px;">
+          <button class="btn btn-primary" style="width:auto;padding:14px 36px;" id="annSubmitBtn" onclick="submitAnnouncement()">
+            Publish Announcement →
+          </button>
+          <div class="form-feedback success" id="ann-success">✓ Announcement published!</div>
+          <div class="form-feedback error"   id="ann-error">✗ Something went wrong. Try again.</div>
+        </div>
+      </div>
+
+      <!-- Announcements table -->
+      <div class="table-section">
+        <div class="table-label">All Announcements</div>
+        <div class="table-scroll-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title / Description</th>
+                <th>Tag</th>
+                <th>Icon</th>
+                <th>Date Label</th>
+                <th>Pinned</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ann-table-body">
+              <tr class="loading-row"><td colspan="6">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-announcements -->
+
+
+    <!-- EVENTS TAB -->
+    <div class="tab-panel" id="tab-events">
+
+      <div class="section-eyebrow">Manage Content</div>
+      <h2 class="section-heading">Add <em>Event</em></h2>
+      <div class="divider"></div>
+
+      <div class="form-card">
+        <div class="form-group">
+          <label class="form-label">Event Title *</label>
+          <input id="ev-title" class="form-input" type="text" placeholder="e.g. Spring Vocal Recital 2025"/>
+        </div>
+
+        <div class="form-row-3" style="margin-bottom:20px;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Month (3 letters) *</label>
+            <input id="ev-month" class="form-input" type="text" placeholder="JUN" maxlength="3" style="text-transform:uppercase;"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Day *</label>
+            <input id="ev-day" class="form-input" type="text" placeholder="14" maxlength="2"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Year *</label>
+            <input id="ev-year" class="form-input" type="text" placeholder="2025" maxlength="4"/>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:20px;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Time</label>
+            <input id="ev-time" class="form-input" type="text" placeholder="e.g. 6:00 PM"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Status</label>
+            <select id="ev-status" class="form-input">
+              <option value="upcoming">Upcoming</option>
+              <option value="past">Past</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input id="ev-location" class="form-input" type="text" placeholder="e.g. Brampton Arts Centre, Main Hall"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea id="ev-description" class="form-input" placeholder="Describe the event..."></textarea>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn btn-primary" style="width:auto;padding:14px 36px;" id="evSubmitBtn" onclick="submitEvent()">
+            Publish Event →
+          </button>
+          <div class="form-feedback success" id="ev-success">✓ Event published!</div>
+          <div class="form-feedback error"   id="ev-error">✗ Something went wrong. Try again.</div>
+        </div>
+      </div>
+
+      <!-- Events table -->
+      <div class="table-section">
+        <div class="table-label">All Events</div>
+        <div class="table-scroll-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title / Description</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ev-table-body">
+              <tr class="loading-row"><td colspan="6">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-events -->
+
+    <!-- CONTACTS TAB -->
+    <div class="tab-panel" id="tab-contacts">
+
+      <div class="section-eyebrow">Client Messages</div>
+      <h2 class="section-heading">Contact <em>Requests</em></h2>
+      <div class="divider"></div>
+
+      <div class="table-section">
+        <div class="table-label">All Messages</div>
+        <div class="table-scroll-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name / Message</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Lesson</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="contacts-table-body">
+              <tr class="loading-row"><td colspan="6">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-contacts -->
+
+  </div>
+</div><!-- /adminScreen -->
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// ── SUPABASE INIT ──────────────────────────────────
+const supabaseClient = window.supabase.createClient(
+  "https://nloyzfqhtyiwjquxtybu.supabase.co",
+  "sb_publishable_1rAhisqG2DDeH7482CUFmg_TWiSGSPi"
+);
+
+async function deleteContact(id) {
+  if (!confirm('Delete this message?')) return;
+  const { error } = await supabaseClient.from('contacts').delete().eq('id', id);
+  if (!error) { loadContacts(); } else { console.error(error); alert('Failed to delete'); }
+}
+
+let currentUser = null;
+
+document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+  const email = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('loginError');
+
+  if (!email || !password) {
+    errEl.textContent = 'Please enter both email and password.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = 'Signing in...';
+  errEl.style.display = 'none';
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errEl.textContent = 'Incorrect email or password.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = 'Sign In →';
+    return;
+  }
+
+  document.getElementById('loggedInUser').textContent = email;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminScreen').style.display = 'block';
+  loadAnnouncements();
+  loadEvents();
+  loadContacts();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminScreen').style.display  = 'none';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').innerHTML = 'Sign In →';
+}
+
+async function loadContacts() {
+  const tbody = document.getElementById('contacts-table-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+  const { data, error } = await supabaseClient.from('contacts').select('*').order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="emoji">📭</span>No messages yet.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(c => `
+    <tr style="${c.completed ? 'opacity:0.5;' : ''}">
+      <td><div class="cell-title">${c.first_name} ${c.last_name}<small>${truncate(c.message, 60)}</small></div></td>
+      <td>${c.email}</td>
+      <td>${c.phone || '—'}</td>
+      <td>${c.lesson_type || '—'}</td>
+      <td><span class="pill ${c.completed ? 'pill-grey' : 'pill-gold'}">${c.completed ? 'Completed' : 'Pending'}</span></td>
+      <td style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="toggleComplete('${c.id}', ${c.completed})">✔</button>
+        <button class="btn btn-danger" onclick="deleteContact('${c.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function toggleComplete(id, currentStatus) {
+  const { error } = await supabaseClient.from('contacts').update({ completed: !currentStatus }).eq('id', id);
+  if (!error) loadContacts();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showFeedback(id, type) {
+  const el = document.getElementById(id);
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 3500);
+}
+
+function truncate(str, n) {
+  if (!str) return '—';
+  return str.length > n ? str.slice(0, n) + '…' : str;
+}
+
+async function loadAnnouncements() {
+  const tbody = document.getElementById('ann-table-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+  const { data, error } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="emoji">📭</span>No announcements yet.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(a => `
+    <tr>
+      <td><div class="cell-title">${a.pinned ? '<span class="pinned-dot"></span>' : ''}${a.title}<small>${truncate(a.description, 60)}</small></div></td>
+      <td><span class="pill pill-gold">${a.tag || '—'}</span></td>
+      <td style="font-size:22px;">${a.icon || '📢'}</td>
+      <td style="color:rgba(253,252,248,0.45);font-size:13px;">${a.date || '—'}</td>
+      <td>${a.pinned ? '<span class="pill pill-green">Pinned</span>' : '<span class="pill pill-grey">No</span>'}</td>
+      <td><button class="btn btn-danger" onclick="deleteAnnouncement('${a.id}')">Delete</button></td>
+    </tr>
+  `).join('');
+}
+
+async function submitAnnouncement() {
+  const title       = document.getElementById('ann-title').value.trim();
+  const description = document.getElementById('ann-description').value.trim();
+  const tag         = document.getElementById('ann-tag').value;
+  const icon        = document.getElementById('ann-icon').value.trim() || '📢';
+  const date        = document.getElementById('ann-date').value.trim() || 'Just now';
+  const pinned      = document.getElementById('ann-pinned').checked;
+
+  if (!title || !description) {
+    document.getElementById('ann-error').classList.add('visible');
+    setTimeout(() => document.getElementById('ann-error').classList.remove('visible'), 3000);
+    return;
+  }
+
+  const btn = document.getElementById('annSubmitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Publishing...';
+
+  const { error } = await supabaseClient.from('announcements').insert([{ title, description, tag, icon, date, pinned }]);
+
+  btn.disabled = false;
+  btn.innerHTML = 'Publish Announcement →';
+
+  if (error) {
+    showFeedback('ann-error', 'error');
+  } else {
+    showFeedback('ann-success', 'success');
+    document.getElementById('ann-title').value = '';
+    document.getElementById('ann-description').value = '';
+    document.getElementById('ann-icon').value = '';
+    document.getElementById('ann-date').value = '';
+    document.getElementById('ann-pinned').checked = false;
+    loadAnnouncements();
+  }
+}
+
+async function deleteAnnouncement(id) {
+  if (!confirm('Delete this announcement? This cannot be undone.')) return;
+  const { error } = await supabaseClient.from('announcements').delete().eq('id', id);
+  if (!error) loadAnnouncements();
+  else alert('Failed to delete. Check console.');
+}
+
+async function loadEvents() {
+  const tbody = document.getElementById('ev-table-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+  const { data, error } = await supabaseClient.from('events').select('*').order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="emoji">📭</span>No events yet.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(e => {
+    const formattedDate = new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return `
+      <tr>
+        <td><div class="cell-title">${e.title}<small>${truncate(e.description, 60)}</small></div></td>
+        <td style="white-space:nowrap;font-size:13px;">${formattedDate}</td>
+        <td style="color:rgba(253,252,248,0.5);font-size:13px;">${e.time || '—'}</td>
+        <td style="color:rgba(253,252,248,0.5);font-size:13px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.location || '—'}</td>
+        <td><span class="pill ${e.status === 'upcoming' ? 'pill-gold' : 'pill-grey'}">${e.status === 'upcoming' ? 'Upcoming' : 'Past'}</span></td>
+        <td><button class="btn btn-danger" onclick="deleteEvent('${e.id}')">Delete</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function submitEvent() {
+  const title       = document.getElementById('ev-title').value.trim();
+  const month       = document.getElementById('ev-month').value.trim().toUpperCase();
+  const day         = document.getElementById('ev-day').value.trim();
+  const year        = document.getElementById('ev-year').value.trim();
+  const time        = document.getElementById('ev-time').value.trim();
+  const location    = document.getElementById('ev-location').value.trim();
+  const description = document.getElementById('ev-description').value.trim();
+  const status      = document.getElementById('ev-status').value;
+
+  if (!title || !month || !day || !year || !description) { showFeedback('ev-error', 'error'); return; }
+
+  const monthMap = { JAN:'01',FEB:'02',MAR:'03',APR:'04',MAY:'05',JUN:'06',JUL:'07',AUG:'08',SEP:'09',OCT:'10',NOV:'11',DEC:'12' };
+  const monthNum = monthMap[month];
+  if (!monthNum) { showFeedback('ev-error', 'error'); return; }
+
+  const date = `${year}-${monthNum}-${day.padStart(2, '0')}`;
+
+  const btn = document.getElementById('evSubmitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Publishing...';
+
+  const { error } = await supabaseClient.from('events').insert([{ title, date, time, location, description, status }]);
+
+  btn.disabled = false;
+  btn.innerHTML = 'Publish Event →';
+
+  if (error) {
+    console.error(error);
+    showFeedback('ev-error', 'error');
+  } else {
+    showFeedback('ev-success', 'success');
+    ['ev-title','ev-month','ev-day','ev-year','ev-time','ev-location','ev-description'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('ev-status').value = 'upcoming';
+    loadEvents();
+  }
+}
+async function deleteEvent(id) {
+  if (!confirm('Delete this event? This cannot be undone.')) return;
+  const { error } = await supabaseClient.from('events').delete().eq('id', id);
+  if (!error) loadEvents();
+  else alert('Failed to delete. Check console.');
+}
+</script>
+</body>
+</html>
