@@ -555,4 +555,12 @@ footer { background:#070707;border-top:1px solid rgba(255,255,255,0.06);padding:
   .cta-section { padding: 48px 16px; }
   .page-header { padding: 48px 16px 32px; }
   .section { padding: 48px 16px; }
+}.admin-link {
+  opacity: 0.6;
+  font-size: 12px;
+}
+
+.admin-link:hover {
+  opacity: 1;
+  color: var(--gold);
 }
