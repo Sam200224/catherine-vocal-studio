@@ -911,7 +911,7 @@ function renderContact() {
             <div class="contact-ico">📞</div>
             <div>
               <div class="contact-detail-label">Phone</div>
-              <div class="contact-detail-val">(905) 555-0100</div>
+              <div class="contact-detail-val">(705) 716-5392</div>
             </div>
           </div>
           <div class="contact-item">
@@ -925,7 +925,7 @@ function renderContact() {
             <div class="contact-ico">📍</div>
             <div>
               <div class="contact-detail-label">Location</div>
-              <div class="contact-detail-val">Brampton, Ontario, Canada</div>
+              <div class="contact-detail-val">Angus, Ontario, Canada</div>
             </div>
           </div>
           <div class="contact-item" style="border-bottom:none;">
