@@ -513,7 +513,7 @@ function renderAbout() {
       <div class="about-grid">
         <div class="about-img-frame fade-up">
           <div class="about-img">
-  <img src="/about.jpeg" alt="Catherine" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />
+  <img src="/About.jpeg" alt="Catherine" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />
 </div>
           <div class="about-img-accent"></div>
           <div class="about-img-badge">
