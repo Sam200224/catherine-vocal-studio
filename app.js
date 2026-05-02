@@ -981,9 +981,9 @@ function renderContact() {
               <textarea id="fMsg" class="form-input" placeholder="Tell us a little about yourself or your child, your experience level, and any questions you have..."></textarea>
             </div>
 
-            <div class="form-success" id="formSuccess">
-              ✓ Thank you! Catherine will be in touch within 24 hours.
-            </div>
+           <div class="form-success" id="formSuccess">
+  🎵 Thank you for reaching out! Your vocal journey starts here — Catherine is excited to connect and will be in touch within 24 hours.
+          </div>
 
             <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;" onclick="submitContactForm()">
               Send Message →
@@ -996,45 +996,90 @@ function renderContact() {
     </section>
   `;
 }
-
-// ─── CONTACT FORM SUBMIT ────────────────────────
 async function submitContactForm() {
-  const first = document.getElementById('fName')?.value?.trim();
-  const last  = document.getElementById('fLast')?.value?.trim();
-  const email = document.getElementById('fEmail')?.value?.trim();
-  const phone = document.getElementById('fPhone')?.value?.trim();
-  const type  = document.getElementById('fType')?.value;
-  const msg   = document.getElementById('fMsg')?.value?.trim();
+  const firstInput = document.getElementById('fName');
+  const lastInput  = document.getElementById('fLast');
+  const emailInput = document.getElementById('fEmail');
+  const phoneInput = document.getElementById('fPhone');
+  const typeInput  = document.getElementById('fType');
+  const msgInput   = document.getElementById('fMsg');
 
-  if (!first || !email || !type) {
-    alert('Please fill in your name, email, and lesson type.');
+  const first = firstInput?.value?.trim();
+  const last  = lastInput?.value?.trim();
+  const email = emailInput?.value?.trim();
+  const phone = phoneInput?.value?.trim();
+  const type  = typeInput?.value;
+  const msg   = msgInput?.value?.trim();
+
+  if (!first || (!email && !phone) || !type) {
+    alert('Please fill in your name, lesson type, and either email or phone.');
     return;
   }
 
   const btn = document.querySelector('#contactForm .btn-primary');
+  const successBox = document.getElementById('formSuccess');
+
+  successBox.style.display = 'none';
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
-  // ✅ INSERT INTO SUPABASE
-  const { error } = await supabaseClient
-    .from('contacts')
-    .insert([{
-      first_name: first,
-      last_name: last,
-      email: email,
-      phone: phone,
-      lesson_type: type,
-      message: msg
-    }]);
+  try {
+    // ✅ SAVE TO SUPABASE (your existing system)
+    const { error } = await supabaseClient
+      .from('contacts')
+      .insert([{
+        first_name: first,
+        last_name: last,
+        email: email,
+        phone: phone,
+        lesson_type: type,
+        message: msg
+      }]);
 
-  if (error) {
-    console.error(error);
-    alert('❌ Failed to send message');
+    if (error) {
+      console.error(error);
+    }
+
+    // ✅ SEND EMAIL TO CATHERINE (Formspree)
+    const formData = new FormData();
+    formData.append('name', `${first} ${last || ''}`.trim());
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('lesson_interest', type);
+    formData.append('message', msg);
+    formData.append('_subject', 'New Vocal Studio Inquiry');
+
+    const res = await fetch("https://formspree.io/f/xnjwngnd", {
+      method: "POST",
+      headers: { "Accept": "application/json" },
+      body: formData
+    });
+
+    if (!res.ok) throw new Error("Formspree failed");
+
+    // ✅ CLEAR FORM (feels like refresh)
+    firstInput.value = '';
+    lastInput.value = '';
+    emailInput.value = '';
+    phoneInput.value = '';
+    typeInput.value = '';
+    msgInput.value = '';
+
+    // ✅ SHOW VOCAL STYLE MESSAGE
+    successBox.style.display = 'block';
+
+    btn.textContent = 'Message Sent ✓';
+
+    setTimeout(() => {
+      btn.textContent = 'Send Message →';
+      btn.disabled = false;
+    }, 3500);
+
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong. Please try again.');
     btn.textContent = 'Send Message →';
     btn.disabled = false;
-  } else {
-    document.getElementById('formSuccess').style.display = 'block';
-    btn.style.display = 'none';
   }
 }
 
